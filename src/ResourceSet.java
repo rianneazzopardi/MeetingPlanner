@@ -1,8 +1,18 @@
 import java.io.Serializable;
 import java.util.*;
 
-//stores all the objects of a particular type of resource, ex all the 'Person's in the system.
-//and provides all the UI menus necessary to modify them
+/**
+ * Abstract UI-backed collection for resources of type {@code E}. Provides a console menu to add,
+ * remove, edit, and display resources stored in an internal set.
+ *
+ * <p>Responsibilities:</p>
+ * <ul>
+ *     <li>Manage a typed set of resources.</li>
+ *     <li>Present a simple CLI for CRUD operations.</li>
+ * </ul>
+ *
+ * @param <E> a {@link Resource} subtype
+ */
 public abstract class ResourceSet<E extends Resource> implements Serializable{
 
     protected Set<E> set = new HashSet<>();
@@ -12,6 +22,10 @@ public abstract class ResourceSet<E extends Resource> implements Serializable{
     public abstract String getMenuTitle();
 
     //shows the menu allowing the user to add,edit,remove and display the resources in this set
+    /**
+     * Shows a console menu for CRUD operations on this resource set.
+     * Blocks until the user chooses to exit to the parent menu.
+     */
     public void showMenu(){
 
         int choice;
@@ -47,10 +61,13 @@ public abstract class ResourceSet<E extends Resource> implements Serializable{
         } while (choice != 5);
     }
 
+    /** Prompts the user for input and adds a resource, handling validation/duplicates. */
     public abstract void addResource();
 
+    /** Prompts the user and removes a resource by its unique identifier. */
     public abstract void removeResource();
 
+    /** Prompts the user and edits a resource's attributes with basic validation. */
     public abstract void editResource();
 
     public void displayAll(){

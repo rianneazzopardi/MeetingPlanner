@@ -1,5 +1,8 @@
 import java.util.Objects;
 
+/**
+ * Represents a person resource that can participate in meetings and is uniquely identified by {@code id}.
+ */
 public class Person extends Resource implements Comparable<Person>{
     private String name,surname,id,position;
 
@@ -49,6 +52,11 @@ public class Person extends Resource implements Comparable<Person>{
     }
 
     @Override
+    /**
+     * Returns a user-friendly, single-line display string including id, name, surname, and position.
+     *
+     * @return a concise summary suitable for UI lists
+     */
     public String toDisplayString(){
         return "ID:" + id + "\t" +
                 "Name:" + name + "\t" +
@@ -71,6 +79,12 @@ public class Person extends Resource implements Comparable<Person>{
 
 
     @Override
+    /**
+     * Compares persons by their {@code id}.
+     *
+     * @param o the other person
+     * @return a negative, zero, or positive integer as this id is less than, equal to, or greater than the other id
+     */
     public int compareTo(Person o){
         return id.compareTo(o.id);
     }

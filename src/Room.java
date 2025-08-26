@@ -1,5 +1,8 @@
 import java.util.Objects;
 
+/**
+ * Represents a room resource with a unique room number and a capacity.
+ */
 public class Room extends Resource implements Comparable<Room>{
 
     private int roomNumber;
@@ -34,6 +37,11 @@ public class Room extends Resource implements Comparable<Room>{
     }
 
     @Override //display the roomNumber and roomCapacity
+    /**
+     * Returns a user-friendly, single-line display string with room number and capacity.
+     *
+     * @return a concise room summary
+     */
     public String toDisplayString(){
         return "roomNumber:" + roomNumber + "\t"+
                 "roomCapacity:" + roomCapacity;
@@ -53,6 +61,12 @@ public class Room extends Resource implements Comparable<Room>{
     }
 
     @Override
+    /**
+     * Compares rooms by their {@code roomNumber}.
+     *
+     * @param o the other room
+     * @return comparison result by room number
+     */
     public int compareTo(Room o){
         return Integer.compare(roomNumber,o.roomNumber);
     }

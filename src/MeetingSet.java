@@ -1,19 +1,22 @@
+
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.*;
 import java.util.function.IntSupplier;
 
-public class MeetingSet implements Serializable{
-    //contains the months as strings in full and abrivated forms
-    //used in monthToInt
+public class MeetingSet implements Serializable {
+    // TODO: Consider using an enum for months instead of static lists
     private static final List<String> monthsFull = Arrays.asList("", "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december");
     private static final List<String> monthsAbbreviated = Arrays.asList("", "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec");
+    
+    // TODO: Consider using a more efficient data structure for faster lookups, e.g., TreeSet
     private Set<Meeting> set = new HashSet<>();
-    //gives ids to meetings, making sure that no 2 meetings have the same id.
+    
+    // TODO: Use AtomicInteger for thread-safety if concurrent access is possible
     private int nextID = 1;
 
-    //shows the meeting menu
-    public void showMenu(){
+    // TODO: Consider breaking down this large method into smaller, more focused methods
+    public void showMenu() {
         int choice;
         do{
             System.out.println("Manage Meetings");
@@ -51,8 +54,8 @@ public class MeetingSet implements Serializable{
         } while (choice != 5);
     }
 
-    //add a new meeting
-    private void addMeeting(){
+    // TODO: Extract validation logic into separate methods
+    private void addMeeting() {
 
         //select type of meeting
         int type;
@@ -131,7 +134,7 @@ public class MeetingSet implements Serializable{
         }
     }
 
-    //removes a meeting
+    // TODO: Add error handling for cases where the meeting to be removed doesn't exist
     private void removeMeeting(){
 
         System.out.println("Enter the ID of the meeting to remove");
@@ -150,7 +153,7 @@ public class MeetingSet implements Serializable{
         System.out.println("Meeting not found");
     }
 
-    //edits a meeting
+    // TODO: Consider using a builder pattern for creating meetings
     private void editMeeting(){
         System.out.println("Enter the ID of the meeting to edit");
         int id = Utils.readInteger();
@@ -174,7 +177,7 @@ public class MeetingSet implements Serializable{
         }
     }
 
-    private void editMeeting(Meeting meeting){
+    private void editMeeting(Meeting meeting) {
         boolean repeat = false;
 
         do{
@@ -217,15 +220,7 @@ public class MeetingSet implements Serializable{
         } while (repeat);
     }
 
-    //displays all meetings
-    public void displayAll(){
-        //comparator to sort by start time
-        Comparator<Meeting> comp = Comparator.comparing(Meeting::getStartTime);
-        //sort the set by start time and output
-        set.stream().sorted(comp).forEach(m-> System.out.println(m.toDisplayString()));
-    }
-
-    //gets the date and time from the user and returns a Calendar containing the values received
+    // TODO: Use Java 8 date/time API instead of Calendar for better handling of dates
     private Calendar inputDateAndTime(){
 
         GregorianCalendar c;
@@ -330,8 +325,7 @@ public class MeetingSet implements Serializable{
         return c;
     }
 
-    //turns a string containing the month in number form, or as text in full or abbreviated form into an integer
-    //returns -1 if the method can't determine what month it is
+    // TODO: Replace this method with an enum for months
     private int monthToInt(String s){
 
         //trim the string to remove any extra whitespace
@@ -360,7 +354,7 @@ public class MeetingSet implements Serializable{
         return monthsAbbreviated.indexOf(s);
     }
 
-    //edits the resources for a meeting, retrying if there are any issues
+    // TODO: Consider using a Strategy pattern for different types of meetings
     private void editResources(Meeting meeting){
 
         boolean repeat = false;
@@ -409,7 +403,7 @@ public class MeetingSet implements Serializable{
 
     }
 
-    //menu to allow user to edit resources for a new or existing meeting
+    // TODO: Use a more descriptive name, e.g., displayResourceManagementMenu
     private void showEditMeetingResourcesMenu(Set<Resource> resources){
         int choice;
         do{
@@ -502,9 +496,8 @@ public class MeetingSet implements Serializable{
         } while (choice != 4);
     }
 
-    //checks whether the addition of this new meeting will clash with any existing one
-    //will also output all the clashing resources for the user to see
-    private boolean willClash(Meeting newMeeting){
+    // TODO: Consider using a more efficient algorithm for clash detection
+    private boolean willClash(Meeting newMeeting) {
         return set.stream().anyMatch(oldMeeting -> {
 
             //check that oldMeeting and newMeeting aren't the same
@@ -530,8 +523,8 @@ public class MeetingSet implements Serializable{
         });
     }
 
-    //gets the set of the meetings
-    public Set<Meeting> getSet(){
+    // TODO: Consider adding methods for querying meetings (e.g., by date range, by resource)
+    public Set<Meeting> getSet() {
         return Collections.unmodifiableSet(set);
     }
 }
