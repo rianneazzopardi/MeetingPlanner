@@ -1,14 +1,39 @@
 import java.util.*;
 
-//stores all the 'Room's in the system.
-//and provides all the UI menus necessary to modify them
+/**
+ * Manages a collection of Room objects in the meeting management system.
+ * 
+ * This class extends ResourceSet to provide specific functionality for managing
+ * rooms in the system. It implements all the abstract methods from ResourceSet
+ * to handle room-specific operations like adding, removing, and editing rooms
+ * with appropriate user interface and validation.
+ * 
+ * The class ensures that each room has a unique room number and validates
+ * room capacity constraints. It provides methods to search for rooms by their number.
+ * 
+ * @author Meeting Management System
+ * @version 1.0
+ */
 public class RoomSet extends ResourceSet<Room>{
 
+    /**
+     * Returns the menu title for room management.
+     * 
+     * @return the string "Manage Rooms" which is displayed as the menu title
+     */
     @Override
     public String getMenuTitle(){
         return "Manage Rooms";
     }
 
+    /**
+     * Adds a new room to the system by collecting user input.
+     * 
+     * This method prompts the user to enter the room number and capacity,
+     * validates that the capacity is positive, and attempts to add the room
+     * to the set. If a room with the same number already exists, the addition
+     * will fail and an error message will be displayed.
+     */
     @Override
     public void addResource(){
         System.out.println("Enter room number: ");
@@ -34,8 +59,15 @@ public class RoomSet extends ResourceSet<Room>{
             System.out.println("Cannot add room because another room already exists with that room number");
     }
 
+    /**
+     * Removes a room from the system by searching for its room number.
+     * 
+     * This method prompts the user for the room number of the room to remove,
+     * searches through the set for a room with that number, and removes it
+     * if found. If no room with the specified number exists, an error message
+     * is displayed.
+     */
     @Override
-    //Searches for the room by number and then removes if found
     public void removeResource(){
         //Asks user for the number of the room to be removed
         System.out.println("Please enter the id of the room to be removed: ");
@@ -57,6 +89,16 @@ public class RoomSet extends ResourceSet<Room>{
         System.out.println("Room not found!");
     }
 
+    /**
+     * Edits an existing room's details through an interactive menu.
+     * 
+     * This method prompts the user for the room number of the room to edit,
+     * then displays a menu allowing them to modify either the room number
+     * or capacity. The user can continue editing until they choose to save
+     * and exit. When editing the room number, the method ensures that the new
+     * number is not already in use by another room. When editing capacity,
+     * it validates that the value is positive.
+     */
     @Override
     public void editResource(){
         boolean found = false;
@@ -119,7 +161,16 @@ public class RoomSet extends ResourceSet<Room>{
         }
     }
 
-    //returns the room object with the given room number
+    /**
+     * Retrieves a room from the set by its room number.
+     * 
+     * This method searches through all rooms in the set and returns the
+     * room object with the specified room number. If no room with the given
+     * number is found, null is returned.
+     * 
+     * @param num the room number of the room to find
+     * @return the Room object with the specified room number, or null if not found
+     */
     public Room getRoomByNumber(int num){
         //loops through the set.
         for (Room e : set){
