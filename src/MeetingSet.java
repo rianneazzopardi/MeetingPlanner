@@ -3,16 +3,38 @@ import java.text.DateFormat;
 import java.util.*;
 import java.util.function.IntSupplier;
 
+/**
+ * Manages a collection of Meeting objects in the meeting management system.
+ * 
+ * This class provides comprehensive functionality for managing meetings including
+ * creating, editing, removing, and displaying meetings. It supports different types
+ * of meetings (Webinar, Group Meet, Meetup) and handles complex operations such as
+ * resource allocation, time scheduling, and conflict detection.
+ * 
+ * The class includes sophisticated date/time input parsing, resource management
+ * user interfaces, and validation to prevent scheduling conflicts between meetings
+ * that share the same resources at overlapping times.
+ * 
+ * @author Meeting Management System
+ * @version 1.0
+ */
 public class MeetingSet implements Serializable{
-    //contains the months as strings in full and abrivated forms
-    //used in monthToInt
+    /** List of full month names used for parsing user input (index 0 is empty, months start at index 1) */
     private static final List<String> monthsFull = Arrays.asList("", "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december");
+    /** List of abbreviated month names used for parsing user input (index 0 is empty, months start at index 1) */
     private static final List<String> monthsAbbreviated = Arrays.asList("", "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec");
+    /** The set that stores all meetings in the system */
     private Set<Meeting> set = new HashSet<>();
-    //gives ids to meetings, making sure that no 2 meetings have the same id.
+    /** Counter for generating unique meeting IDs */
     private int nextID = 1;
 
-    //shows the meeting menu
+    /**
+     * Displays the main meeting management menu and handles user navigation.
+     * 
+     * This method presents a menu with options to add, remove, edit, and display
+     * meetings. It continues to display the menu until the user chooses to exit.
+     * Invalid input is handled gracefully with error messages.
+     */
     public void showMenu(){
         int choice;
         do{
@@ -51,7 +73,19 @@ public class MeetingSet implements Serializable{
         } while (choice != 5);
     }
 
-    //add a new meeting
+    /**
+     * Adds a new meeting to the system through an interactive process.
+     * 
+     * This method guides the user through the process of creating a new meeting:
+     * 1. Selects the type of meeting (webinar, group meet, or meetup)
+     * 2. Collects start and end times with validation
+     * 3. Allows the user to configure resources for the meeting
+     * 4. Creates the appropriate meeting object based on type
+     * 5. Validates resource constraints and handles conflicts
+     * 
+     * If the meeting would clash with existing meetings on shared resources,
+     * it provides the user with options to edit the meeting to resolve conflicts.
+     */
     private void addMeeting(){
 
         //select type of meeting
@@ -131,7 +165,13 @@ public class MeetingSet implements Serializable{
         }
     }
 
-    //removes a meeting
+    /**
+     * Removes a meeting from the system by its ID.
+     * 
+     * This method prompts the user for the ID of the meeting to remove,
+     * searches for the meeting with that ID, and removes it if found.
+     * If no meeting with the specified ID exists, an error message is displayed.
+     */
     private void removeMeeting(){
 
         System.out.println("Enter the ID of the meeting to remove");
@@ -217,7 +257,13 @@ public class MeetingSet implements Serializable{
         } while (repeat);
     }
 
-    //displays all meetings
+    /**
+     * Displays all meetings in the system sorted by start time.
+     * 
+     * This method creates a comparator to sort meetings by their start time
+     * and then displays each meeting using its toDisplayString() method.
+     * The meetings are shown in chronological order.
+     */
     public void displayAll(){
         //comparator to sort by start time
         Comparator<Meeting> comp = Comparator.comparing(Meeting::getStartTime);
@@ -225,7 +271,20 @@ public class MeetingSet implements Serializable{
         set.stream().sorted(comp).forEach(m-> System.out.println(m.toDisplayString()));
     }
 
-    //gets the date and time from the user and returns a Calendar containing the values received
+    /**
+     * Collects date and time input from the user and returns a Calendar object.
+     * 
+     * This method prompts the user to enter year, month, day, hour, and minute.
+     * It performs comprehensive validation:
+     * - Ensures numeric values are valid integers
+     * - Validates month names (accepts full names, abbreviations, or numbers)
+     * - Checks day validity for the specific month and year
+     * - Validates hour (0-23) and minute (0-59) ranges
+     * 
+     * The method continues prompting until valid input is provided for each field.
+     * 
+     * @return a Calendar object representing the date and time entered by the user
+     */
     private Calendar inputDateAndTime(){
 
         GregorianCalendar c;
@@ -330,8 +389,19 @@ public class MeetingSet implements Serializable{
         return c;
     }
 
-    //turns a string containing the month in number form, or as text in full or abbreviated form into an integer
-    //returns -1 if the method can't determine what month it is
+    /**
+     * Converts a string representation of a month to an integer.
+     * 
+     * This method accepts month input in three formats:
+     * - Numeric form (1-12)
+     * - Full month names (e.g., "january", "february")
+     * - Abbreviated month names (e.g., "jan", "feb")
+     * 
+     * The conversion is case-insensitive and trims whitespace.
+     * 
+     * @param s the string representation of the month
+     * @return the month as an integer (1-12), or -1 if the month cannot be determined
+     */
     private int monthToInt(String s){
 
         //trim the string to remove any extra whitespace
@@ -409,7 +479,21 @@ public class MeetingSet implements Serializable{
 
     }
 
-    //menu to allow user to edit resources for a new or existing meeting
+    /**
+     * Displays an interactive menu for managing meeting resources.
+     * 
+     * This method provides a user interface for adding and removing resources
+     * (people and rooms) from a meeting. Users can:
+     * - Add rooms by specifying room number
+     * - Add people by specifying person ID
+     * - Remove rooms or people from the meeting
+     * - Display all currently assigned resources
+     * 
+     * The method validates that resources exist before adding them and provides
+     * appropriate feedback for all operations.
+     * 
+     * @param resources the set of resources to be modified
+     */
     private void showEditMeetingResourcesMenu(Set<Resource> resources){
         int choice;
         do{
@@ -502,8 +586,20 @@ public class MeetingSet implements Serializable{
         } while (choice != 4);
     }
 
-    //checks whether the addition of this new meeting will clash with any existing one
-    //will also output all the clashing resources for the user to see
+    /**
+     * Determines if a meeting will have scheduling conflicts with existing meetings.
+     * 
+     * This method checks if the new meeting would clash with any existing meetings
+     * by comparing time overlaps and shared resources. Two meetings clash if:
+     * 1. Their time periods overlap (start time of one is before end time of the other)
+     * 2. They share at least one common resource (person or room)
+     * 
+     * When conflicts are found, detailed information about the clashing resources
+     * is displayed to help the user understand and resolve the conflicts.
+     * 
+     * @param newMeeting the meeting to check for conflicts
+     * @return true if there are scheduling conflicts, false otherwise
+     */
     private boolean willClash(Meeting newMeeting){
         return set.stream().anyMatch(oldMeeting -> {
 
@@ -530,7 +626,14 @@ public class MeetingSet implements Serializable{
         });
     }
 
-    //gets the set of the meetings
+    /**
+     * Returns an unmodifiable view of the meetings set.
+     * 
+     * This method provides read-only access to the internal set of meetings,
+     * preventing external modification while allowing iteration and querying.
+     * 
+     * @return an unmodifiable set containing all meetings in the system
+     */
     public Set<Meeting> getSet(){
         return Collections.unmodifiableSet(set);
     }

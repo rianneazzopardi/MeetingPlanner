@@ -1,14 +1,39 @@
 import java.util.Iterator;
 
-//stores all the 'Person's in the system.
-//and provides all the UI menus necessary to modify them
+/**
+ * Manages a collection of Person objects in the meeting management system.
+ * 
+ * This class extends ResourceSet to provide specific functionality for managing
+ * people in the system. It implements all the abstract methods from ResourceSet
+ * to handle person-specific operations like adding, removing, and editing people
+ * with appropriate user interface and validation.
+ * 
+ * The class ensures that each person has a unique ID and provides methods to
+ * search for people by their ID.
+ * 
+ * @author Meeting Management System
+ * @version 1.0
+ */
 public class PersonSet extends ResourceSet<Person>{
 
+    /**
+     * Returns the menu title for person management.
+     * 
+     * @return the string "Manage People" which is displayed as the menu title
+     */
     @Override
     public String getMenuTitle(){
         return "Manage People";
     }
 
+    /**
+     * Adds a new person to the system by collecting user input.
+     * 
+     * This method prompts the user to enter all required person details
+     * (name, surname, ID, and position) and attempts to add the person to the set.
+     * If a person with the same ID already exists, the addition will fail and
+     * an error message will be displayed.
+     */
     @Override
     public void addResource(){
         Person p = new Person();
@@ -31,13 +56,17 @@ public class PersonSet extends ResourceSet<Person>{
             System.out.println("person added successfully");
         else
             System.out.println("Cannot add person because another person already exists with that id number");
-
-
-
     }
 
+    /**
+     * Removes a person from the system by searching for their ID.
+     * 
+     * This method prompts the user for the ID of the person to remove,
+     * searches through the set for a person with that ID, and removes them
+     * if found. If no person with the specified ID exists, an error message
+     * is displayed.
+     */
     @Override
-    //Searches for the person by id and then removes if found
     public void removeResource(){
         //Asks user for the id of the person to be removed
         System.out.println("Please enter the id of the person to be removed: ");
@@ -57,9 +86,17 @@ public class PersonSet extends ResourceSet<Person>{
 
         //person was not found, so we inform the user and return
         System.out.println("Person not found!");
-
     }
 
+    /**
+     * Edits an existing person's details through an interactive menu.
+     * 
+     * This method prompts the user for the ID of the person to edit, then
+     * displays a menu allowing them to modify individual fields (name, surname,
+     * ID, or position). The user can continue editing until they choose to save
+     * and exit. When editing the ID, the method ensures that the new ID is not
+     * already in use by another person.
+     */
     @Override
     public void editResource(){
         //Asks user to enter the id in order to search for the person to be edited
@@ -123,7 +160,16 @@ public class PersonSet extends ResourceSet<Person>{
         }
     }
 
-    //returns the person object with the given ID
+    /**
+     * Retrieves a person from the set by their ID.
+     * 
+     * This method searches through all persons in the set and returns the
+     * person object with the specified ID. If no person with the given ID
+     * is found, null is returned.
+     * 
+     * @param s the ID of the person to find
+     * @return the Person object with the specified ID, or null if not found
+     */
     public Person getPersonByID(String s){
         //loops through the set.
         for (Person e : set){
